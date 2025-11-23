@@ -43,6 +43,24 @@ class Ex1Test {
 		double f12x = Ex1.f(po12, x);
 		assertEquals(f1x + f2x, f12x, Ex1.EPS);
 	}
+    @Test
+    void testAddSimple(){
+        double [] p1 = {1,2,3,4};
+        double [] p2 = {1,2,3};
+        double [] sum_p12 = Ex1.add(p1, p2);
+        double [] expected_sum12 = {2,4,6,4};
+        assertArrayEquals(expected_sum12,sum_p12,Ex1.EPS);
+        double [] p3 = {5,6.5,23};             //23x^2+6.5x+5
+        double [] p4 = {3.4,-2,5,4};           //4x^3+5x^2-2x+3.4
+        double [] sum_p34 = Ex1.add(p3,p4);
+        double [] expected_sum34 = {8.4,4.5,28,4};        //4x^3+28x^2+4.5x+8.4
+        assertArrayEquals(sum_p34, expected_sum34,Ex1.EPS);
+        double [] p5 = {0};                 //0
+        double [] big_p6 = {1000,-10000,100000};                 //100000x^2-10000x+1000
+        double [] sum_p56 = Ex1.add(p5,big_p6);
+        double [] expected_sum_p56 = {1000,-10000,100000};       //p4+0=p4
+        assertArrayEquals(sum_p56, expected_sum_p56,Ex1.EPS);
+    }
 	@Test
 	/**
 	 * Tests that p1+p2+ (-1*p2) == p1
@@ -103,6 +121,25 @@ class Ex1Test {
 			assertEquals(f12x, f1x*f2x, Ex1.EPS);
 		}
 	}
+    @Test
+    void testDerivativeSimple() {
+        double [] p1 = {1,2,3};             //3x^2x+1
+        double [] dp1 = Ex1.derivative(p1);
+        double [] expected_dp1 = {2,6};        //6x+2
+        assertArrayEquals(dp1,expected_dp1,Ex1.EPS);
+        double [] p2 = {3.4,-2.7,5,4};      //4x^3+7.5x^2-2.7x+3.4
+        double [] dp2 = Ex1.derivative(p2);
+        double [] expected_dp2 = {-2.7,10,12};  //12x^2+10x-2.7
+        assertArrayEquals(dp2,expected_dp2,Ex1.EPS);
+        double [] p3 = {0};                 //0
+        double [] dp3 = Ex1.derivative(p3);
+        double [] expected_dp3 = {0};       //0
+        assertArrayEquals(dp3,expected_dp3,Ex1.EPS);
+        double [] big_p4 = {1000,-10000,100000};                 //100000x^2-10000x+1000
+        double [] big_dp4 = Ex1.derivative(big_p4);
+        double [] expected_big_dp4 = {-10000,200000};       //200000x-10000
+        assertArrayEquals(big_dp4, expected_big_dp4,Ex1.EPS);
+    }
 	@Test
 	/**
 	 * Tests a simple derivative examples - till ZERO.

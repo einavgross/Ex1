@@ -168,22 +168,43 @@ public class Ex1 {
 	}
 	/**
 	 * This function computes the polynomial function which is the sum of two polynomial functions (p1,p2)
-	 * @param p1
-	 * @param p2
-	 * @return
+	 * @param p1 An array of doubles representing a polynomial function.
+	 * @param p2 An array of doubles representing a polynomial function.
+	 * @return an array representing the polynomial function of the sum of the two polynomial functions.
+     * this function compute the sum of the coefficients for each value and insert it in the new array, by the value's power.
+     * double [] ans = ZERO;
+     * double [] max_p = maxArray(p1, p2);  // a private function to get the longer array
+     * double [] min_p= minArray(p1,p2);    //a private function to get the shorter array
+     * ans = new double [max_p.length] //change the ans array size to the length of the longer array
+     * for(i=0;i<ans.length;i++){      //go through all the values of the final array
+     * if(i<min_p.length) {         //if i hasn't reached the end of the min array => more objects to sum up
+     *    ans[i]= max_p[i]+min_p[i];} //sum up the values with the same power (same index)
+     * else {                       //no more values to sum in from min array
+     *  ans[i] = max_p[i];}       //copy the rest of the values from max array to the final array
+     * }                          //  ends for block
+     * return ans
 	 */
 	public static double[] add(double[] p1, double[] p2) {
-		double [] ans = ZERO;//
-        /** add you code below
-
-         /////////////////// */
+		double [] ans = ZERO;
+        double [] max_p =Ex1.maxArray(p1, p2);
+        double [] min_p= Ex1.minArray(p1,p2);
+        ans = new double[max_p.length];
+        for(int i=0;i<ans.length;i++) {
+            if (i<min_p.length) {
+                ans[i] = max_p[i]+min_p[i];
+            }
+            else {
+                ans[i] = max_p[i];
+            }
+        }
 		return ans;
 	}
-	/**
+
+    /**
 	 * This function computes the polynomial function which is the multiplication of two polynoms (p1,p2)
-	 * @param p1
-	 * @param p2
-	 * @return
+	 * @param p1 An array of doubles representing a polynomial function.
+	 * @param p2 An array of doubles representing a polynomial function.
+	 * @return an array representing the polynomial function of the multiplication of the two polynomial functions.
 	 */
 	public static double[] mul(double[] p1, double[] p2) {
 		double [] ans = ZERO;//
@@ -193,15 +214,68 @@ public class Ex1 {
 		return ans;
 	}
 	/**
-	 * This function computes the derivative of the p0 polynomial function.
-	 * @param po
-	 * @return
+	 * This function computes the derivative of the po polynomial function.
+	 * @param po Array of doubles representing the polynomial function.
+	 * @return Array of doubles representing the derivative of the polynomial function.
+     * The function multiplies the coefficient of X by its power and inserts it into the correct position in the array.
+     * if(po.length>=2 && po!=null) {       //checks functions with at least x^1 (the derivative of a constant term is 0)
+     * ans = new double[po.lengh-1]         //change the length of ans to po length -1
+     * for(int i = po.lengh-1;i>=0;i--){    //go through all the values in po from the end
+     * ans[i-1]=po[i]*i }                    //chanfe the values in ans to the power * the coefficient
+     * }                                    //ends for block
+     * return ans                           //return final derivative array
 	 */
 	public static double[] derivative (double[] po) {
-		double [] ans = ZERO;//
-        /** add you code below
-
-         /////////////////// */
+		double [] ans = ZERO;
+        if (po.length>=2 && po!=null) {
+            ans = new double[po.length-1];
+            for(int i=po.length-1;i>0;i--) {
+                ans[i-1]=po[i]*i;
+            }
+        }
 		return ans;
 	}
+
+    /**
+     * this function gets 2 double arrays and return the longer array
+     * @param p1 a double array
+     * @param p2 a double array
+     * @return the longer array, if they have the same length, return the first one (p1)
+     * this function checks if p1.length is bigger or equals to p2.length and return p1 if so, else return p2.
+     * double max_p [];
+     * if(p1.length>=p2.length) {max_p=p1}
+     * else {max_p = 2}
+     * return max_p
+     */
+    private static double [] maxArray(double[] p1, double[] p2) {
+        double [] max_p;
+        if (p1.length>=p2.length) {
+            max_p = p1;
+        }
+        else  {
+            max_p = p2; }
+        return max_p;
+        }
+    /**
+     * this function gets 2 double arrays and return the shorter array
+     * @param p1 a double array
+     * @param p2 a double array
+     * @return the shorter array, if they have the same length, return the second one (p2)
+     * this function checks if p1.length is less than p2.length and return p1 if so, else return p2.
+     * double min_p [];
+     * if(p1.length<p2.length) {min_p=p1}
+     * else {min_p = 2}
+     * return min_p
+     */
+    private static double [] minArray(double[] p1, double[] p2) {
+        double [] min_p;
+        if (p1.length<p2.length) {
+            min_p = p1;
+        }
+        else  {
+            min_p = p2; }
+        return min_p;
+    }
+
 }
+
