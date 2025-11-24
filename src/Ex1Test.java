@@ -89,6 +89,35 @@ class Ex1Test {
 		double[] p1 = Ex1.add(po1, Ex1.ZERO);
 		assertTrue(Ex1.equals(p1, po1));
 	}
+    @Test
+    void testMulSimple() {
+        double[] p1 = {1, 2, 3};
+        double[] p2 = {1, 2};
+        double[] mul_p12 = Ex1.mul(p1, p2);
+        double[] expected_mul12 = {1, 4, 7, 6};
+        assertArrayEquals(expected_mul12, mul_p12, Ex1.EPS);
+    }
+    @Test
+    void testComplex() {
+        double [] p3 = {10,2,2.2,-1};             //-x^3+2.2x^2+2x+10
+        double [] p4 = {3.9,-2.5,0,11};           //11x^3-2.5x+3.9
+        double [] mul_p34 = Ex1.mul(p3,p4);
+        double [] expected_mul34 = {39,-17.2,3.58,100.6,24.5,24.2,-11};        //-11x^6+24.2x^5+24.5x^4+100.6x^3+3.58x^2-17.2x+39
+        assertArrayEquals(mul_p34, expected_mul34,Ex1.EPS);
+
+    }@Test
+    void testbig2() {
+        double [] p1 = {379,4493,539}; //539x^2+4493x+379
+        double [] p2 = {111,222,333};  //333x^2+222x+111
+        double [] big_p12 = Ex1.mul(p1,p2);
+        double [] expected_mul12 = {42069,582861,1183482,1615827,179487};
+        assertArrayEquals(big_p12, expected_mul12,Ex1.EPS);
+        double [] p5 = {0};                 //0
+        double [] big_p6 = {1000,-10000,100000};                 //100000x^2-10000x+1000
+        double [] mul_p56 = Ex1.mul(p5,big_p6);
+        double [] expected_mul_p56 = Ex1.ZERO;       //p4*0=p4
+        assertArrayEquals(mul_p56, expected_mul_p56,Ex1.EPS);
+    }
 	@Test
 	/**
 	 * Tests that p1*0 == 0

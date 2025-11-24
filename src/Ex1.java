@@ -205,12 +205,27 @@ public class Ex1 {
 	 * @param p1 An array of doubles representing a polynomial function.
 	 * @param p2 An array of doubles representing a polynomial function.
 	 * @return an array representing the polynomial function of the multiplication of the two polynomial functions.
+     * this function multiply each value in the first array with each value in the second array and insert it in the new array
+     * double [] ans = ZERO;
+     * if(!isAllZero(p1) && !isAllZero(p2)) {     //if one of the poly is only zeros, so the answer is also zero
+     * ans = new double [(p1.length+p2.length)-1] //set the final array's length to the sum of p1.length and p2.length, minus 1
+     * for(int i=0;i<p1.length;i++){               //go through all the values in p1
+     *  for(int j=0;j<p2.length;j++){              //go through all the values in p2
+     *      ans[i+j]=ans[i+j]+(p1[i]*p2[j])}       //sums up the multiplications of each of the values in the right index
+     * }                                            //ends 1st for block
+     * }                                            //ends 1st for block
+     * return ans
 	 */
 	public static double[] mul(double[] p1, double[] p2) {
-		double [] ans = ZERO;//
-        /** add you code below
-
-         /////////////////// */
+		double [] ans = ZERO;
+        if(!isAllZero(p1) && !isAllZero(p2)) {
+            ans = new double[(p1.length + p2.length) - 1];
+            for (int i = 0; i < p1.length; i++) {
+                for (int j = 0; j < p2.length; j++) {
+                    ans[i + j] = ans[i + j] + (p1[i] * p2[j]);
+                }
+            }
+        }
 		return ans;
 	}
 	/**
@@ -218,7 +233,7 @@ public class Ex1 {
 	 * @param po Array of doubles representing the polynomial function.
 	 * @return Array of doubles representing the derivative of the polynomial function.
      * The function multiplies the coefficient of X by its power and inserts it into the correct position in the array.
-     * if(po.length>=2 && po!=null) {       //checks functions with at least x^1 (the derivative of a constant term is 0)
+     * if(po.length>=2) {       //checks functions with at least x^1 (the derivative of a constant term is 0)
      * ans = new double[po.lengh-1]         //change the length of ans to po length -1
      * for(int i = po.lengh-1;i>=0;i--){    //go through all the values in po from the end
      * ans[i-1]=po[i]*i }                    //chanfe the values in ans to the power * the coefficient
@@ -227,7 +242,7 @@ public class Ex1 {
 	 */
 	public static double[] derivative (double[] po) {
 		double [] ans = ZERO;
-        if (po.length>=2 && po!=null) {
+        if (po.length>=2) {
             ans = new double[po.length-1];
             for(int i=po.length-1;i>0;i--) {
                 ans[i-1]=po[i]*i;
@@ -275,6 +290,26 @@ public class Ex1 {
         else  {
             min_p = p2; }
         return min_p;
+    }
+
+    /**
+     * this function checks if all the array's values are zero
+     * @param p double array
+     * @return false if at least one of the array's values is not 0, else return true.
+     * this function check for each value of the array if it's not 0,if finds one, returns true
+     * for (int i = 0; i < p.length; i++) {
+     *      if (p[i] != 0) {
+     *          return false;}
+     * }
+     * return true;
+     */
+    private static boolean isAllZero(double[] p) {
+        for (int i = 0; i < p.length; i++) {
+            if (p[i] != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
