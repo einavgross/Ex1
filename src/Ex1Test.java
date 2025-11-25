@@ -44,11 +44,37 @@ class Ex1Test {
 		assertEquals(f1x + f2x, f12x, Ex1.EPS);
 	}
     @Test
+    void PolynomFromTreePoints(){
+        double[] xx1 = {1,3,5};
+        double[] yy1 = {2,4,6};
+        double [] polyOfXxYy1 = Ex1.PolynomFromPoints(xx1,yy1);
+        double [] expected_1 = {1,1,0};
+        assertArrayEquals(polyOfXxYy1,expected_1,Ex1.EPS);
+        double[] xx2 = {14,3,0};
+        double[] yy2 = {61,6,33};
+        double [] polyOfXxYy2 = Ex1.PolynomFromPoints(xx2,yy2);
+        double [] expected_2 = {33,-12,1};
+        assertArrayEquals(polyOfXxYy2,expected_2,Ex1.EPS);
+    }
+    @Test
+    void PolynomFromTwoPoints() {
+        double[] xx1 = {1,0};
+        double[] yy1 = {2,6};
+        double [] polyOfXxYy1 = Ex1.PolynomFromPoints(xx1,yy1);
+        double [] expected_1 = {6,-4};
+        assertArrayEquals(polyOfXxYy1,expected_1,Ex1.EPS);
+        double [] xx2={7,8};
+        double[] yy2 = {2,0};
+        double [] polyOfXxYy2 = Ex1.PolynomFromPoints(xx2, yy2);
+        double [] expected_2 = {16,-2};
+        assertArrayEquals(polyOfXxYy2, expected_2,Ex1.EPS);
+    }
+    @Test
     void testAddSimple(){
-        double [] p1 = {1,2,3,4};
-        double [] p2 = {1,2,3};
+        double [] p1 = {1,2,3};
+        double [] p2 = {1,2,-3};
         double [] sum_p12 = Ex1.add(p1, p2);
-        double [] expected_sum12 = {2,4,6,4};
+        double [] expected_sum12 = {2,4,0};
         assertArrayEquals(expected_sum12,sum_p12,Ex1.EPS);
         double [] p3 = {5,6.5,23};             //23x^2+6.5x+5
         double [] p4 = {3.4,-2,5,4};           //4x^3+5x^2-2x+3.4

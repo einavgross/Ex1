@@ -43,26 +43,41 @@ public class Ex1 {
 		double f1 = f(p,x1);
 		double x12 = (x1+x2)/2;
 		double f12 = f(p,x12);
-		if (Math.abs(f12)<eps) {return x12;}
-		if(f12*f1<=0) {return root_rec(p, x1, x12, eps);}
-		else {return root_rec(p, x12, x2, eps);}
+		if (Math.abs(f12)<eps) {
+            return x12;}
+		if(f12*f1<=0) {
+            return root_rec(p, x1, x12, eps);}
+		else {
+            return root_rec(p, x12, x2, eps);}
 	}
 	/**
 	 * This function computes a polynomial representation from a set of 2D points on the polynom.
 	 * The solution is based on: //	http://stackoverflow.com/questions/717762/how-to-calculate-the-vertex-of-a-parabola-given-three-points
 	 * Note: this function only works for a set of points containing up to 3 points, else returns null.
-	 * @param xx
-	 * @param yy
+	 * @param xx an array with values of x1,x2,x3
+	 * @param yy an array with values of y1,y2,y3
 	 * @return an array of doubles representing the coefficients of the polynom.
+     * this function uses sub function to find the Polynom equation from 2 or 3 points, based on the formula above
+     * double [] ans = null;
+     * int lx = xx.length;
+     * int ly = yy.length;
+     * if(xx!=null && yy!=null && lx==ly && lx>1 && lx<4){ //The arrays must be not null and have the same length (2 or 3)
+     *    if(lx==2){ans = polyForTwo(xx,yy);} //use the sub-function for 2 points
+     *    if(lx==3){ans=polyForThree(xx,yy);} //use the sub-function for 3 points
+     * }
+     * return ans //return final array
 	 */
 	public static double[] PolynomFromPoints(double[] xx, double[] yy) {
-		double [] ans = null;
+        double [] ans = null;
 		int lx = xx.length;
 		int ly = yy.length;
 		if(xx!=null && yy!=null && lx==ly && lx>1 && lx<4) {
-		/** add you code below
-
-		/////////////////// */
+            if(lx==2){
+                ans = polyForTwo(xx,yy);
+            }
+            if(lx==3){
+                ans=polyForThree(xx,yy);
+            }
 		}
 		return ans;
 	}
@@ -310,6 +325,54 @@ public class Ex1 {
             }
         }
         return true;
+    }
+
+    /**
+     * this function compute the equation of a straight line using the Lagrange Formula (detailed in the link above)
+     * @param xx an array with values of x1,x2
+     * @param yy an array with values of y1,y2
+     * @return an array representing the equation of the line that connects the 3 points
+     * this function computes the coefficients of the polynom and inserts them to the array
+     * double denom = (xx[0] - xx[1]) * (xx[0] - xx[2]) * (xx[1] - xx[2]); //computing the denominator for finding the equation
+     * if (denom == 0) {return null;} //making sure that the denominator is not 0
+     *  double A = (xx[2] * (yy[1] - yy[0]) + xx[1] * (yy[0] - yy[2]) + xx[0] * (yy[2] - yy[1])) / denom;
+     *  double B = (xx[2]*xx[2] * (yy[0] - yy[1]) + xx[1]*xx[1] * (yy[2] - yy[0]) + xx[0]*xx[0] * (yy[1] - yy[2])) / denom;
+     *  double C = (xx[1] * xx[2] * (xx[1] - xx[2]) * yy[0] + xx[2] * xx[0] * (xx[2] - xx[0]) * yy[1] + xx[0] * xx[1] * (xx[0] - xx[1]) * yy[2]) / denom;
+     *  double [] ans = {C,B,A}; //inserting the final coefficients into the array
+     *  return ans
+     */
+    private static double [] polyForThree(double[] xx, double[] yy) {
+        double denom = (xx[0] - xx[1]) * (xx[0] - xx[2]) * (xx[1] - xx[2]);
+        if (denom == 0) {return null;}
+        double A = (xx[2] * (yy[1] - yy[0]) + xx[1] * (yy[0] - yy[2]) + xx[0] * (yy[2] - yy[1])) / denom;
+        double B = (xx[2]*xx[2] * (yy[0] - yy[1]) + xx[1]*xx[1] * (yy[2] - yy[0]) + xx[0]*xx[0] * (yy[1] - yy[2])) / denom;
+        double C = (xx[1] * xx[2] * (xx[1] - xx[2]) * yy[0] + xx[2] * xx[0] * (xx[2] - xx[0]) * yy[1] + xx[0] * xx[1] * (xx[0] - xx[1]) * yy[2]) / denom;
+        double [] ans = {C,B,A};
+        return ans;
+    }
+
+    /**
+     * this function compute the equation of a straight line using the Slope-Intercept Form
+     * @param xx an array with values of x1,x2
+     * @param yy an array with values of y1,y2
+     * @return an array representing the equation of the line that connects both points
+     * this function computes the slope - m and the intercept - b and inserts them to the final array.
+     * double numer = (yy[1]-yy[0])        //computing the numerator for finding the gradient
+     * double denom = (xx[1] - xx[0])     //computing the denominator for finding the Gradient
+     * if (denom == 0) {return null}       //making sure that the denominator is not 0
+     * double m = numer/denom              //computing the Gradient
+     * double b = yy[1]-m*xx[1]            //computing the intercept
+     * double [] ans = {b,m}               //insert to final array, when m is the
+     * return ans
+     */
+    private static double [] polyForTwo(double[] xx, double[] yy) {
+        double numer = (yy[1]-yy[0]);
+        double denom = (xx[1] - xx[0]);
+        if (denom == 0) {return null;}
+        double m = numer/denom;
+        double b = yy[1]-m*xx[1];
+        double [] ans = {b,m};
+        return ans;
     }
 
 }
