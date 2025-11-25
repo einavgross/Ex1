@@ -85,13 +85,26 @@ public class Ex1 {
 	 * where n is the max degree (over p1, p2) - up to an epsilon (aka EPS) value.
 	 * @param p1 first polynomial function
 	 * @param p2 second polynomial function
-	 * @return true iff p1 represents the same polynomial function as p2.
+	 * @return true if p1 represents the same polynomial function as p2.
+     * this function creates (with sub-function) an array of n+1 X values.
+     * the function return false if one of the values doesn't return the same f(x) value(up to EPS) for p1 and p2.else return true
+     * boolean ans=true
+     * n=max(p1.length-1,p1.length-1)               //set n to the max of the max index of each array - representing the max degree
+     * double [] x = createFinalArr(n+1);           //a sub-function that creates an array with size n+1
+     * for (int i = 0; i < x.length && ans; i++) {   //go through the whole array or until false
+     *     if (Math.abs(f(p1,x[i])-f(p2,x[i]))>EPS) {ans=false;}    //check if the f(x) for each x is not equals
+     * }                                                            //ends for block
+     * return ans
 	 */
 	public static boolean equals(double[] p1, double[] p2) {
 		boolean ans = true;
-        /** add you code below
-
-         /////////////////// */
+        int n= Math.max(p1.length-1,p2.length-1);
+        double [] x = createFinalArr(n+1);
+        for (int i = 0; i < x.length && ans; i++) {
+            if (Math.abs(f(p1,x[i])-f(p2,x[i]))>EPS){
+                ans=false;
+            }
+        }
 		return ans;
 	}
 
@@ -105,9 +118,7 @@ public class Ex1 {
 		String ans = "";
 		if(poly.length==0) {ans="0";}
 		else {
-            /** add you code below
 
-             /////////////////// */
 		}
 		return ans;
 	}
@@ -375,5 +386,21 @@ public class Ex1 {
         return ans;
     }
 
+    /**
+     * this function creates a double array with fixed values 0-size ({0.0,1.0,2.0,...,size.0})
+     * @param size an integer setting the size of the array
+     * @return a double array with fixed values
+     * this function creates a double array and inserts i in arr[i] (which converts it to double)
+     * double [] arr = new double [size];
+     * for (int i = 0; i < size; i++) {arr[i] = i;}
+     * return arr
+     */
+    private static double [] createFinalArr (int size) {
+        double [] arr = new double [size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = i;
+        }
+        return arr;
+    }
 }
 
