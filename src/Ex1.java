@@ -113,14 +113,55 @@ public class Ex1 {
 	 * For example the array {2,0,3.1,-1.2} will be presented as the following String  "-1.2x^3 +3.1x^2 +2.0"
 	 * @param poly the polynomial function represented as an array of doubles
 	 * @return String representing the polynomial function:
+     * this function concats each value in the array (using StringBuilder()) with the right sign (+/-) and the power (x^Index)
+     * the function skips values with 0 in the array and ignores ^1 (x).
+     *StringBuilder ans=newStringBuilder();
+     * if(poly.length==0){ans=newStringBuilder("0");}
+     * 	else{
+     *   	String val="";
+     *   	for(inti=poly.length-1;i>=0;i--){
+     * 	        if(poly[i]!=0){                                             //append only coefficients !=0
+     * 		        if(poly[i]<0|val.isEmpty()) {val=poly[i]}               //append with no sign if the coefficient is negative or first
+     * 		        if(poly[i]>0&&!val.equals(poly[i])) {val= "+"+poly[i]}  //append + if the coefficient is positive
+     * 		        if(i>1){ans.append(val).append("x^").append(i)}         //append the power to x^ if not 0 or 1
+     * 		        else{                                                   //if i=1 or i=o
+     * 		            if(i==1){ans.append(val).append("x");}              //if the power is 1, append the coefficient to x
+     * 		            if(i==0) {ans.append(val);}                         //if the power is 0, append the coefficient alone
+     *              }                                                       //ends else block
+     *          }                                                           //ends if block
+     *      }                                                               //ends for block
+     * }                                                                    //ends else block
+     * return ans.toString();                                               //convert ans to regular string and return
 	 */
 	public static String poly(double[] poly) {
-		String ans = "";
-		if(poly.length==0) {ans="0";}
+		StringBuilder ans = new StringBuilder();
+		if(poly.length==0) {
+            ans = new StringBuilder("0");}
 		else {
-
+            String val = "";
+            for(int i=poly.length-1;i>=0;i--) {
+                if (poly[i]!=0) {
+                    if (poly[i] < 0 | val.isEmpty()) {
+                        val = ""+poly[i];
+                    }
+                    if (poly[i] > 0 && !val.equals(""+poly[i])) {
+                        val = " +" + poly[i];
+                    }
+                    if (i>1) {
+                        ans.append(val).append("x^").append(i);
+                    }
+                    else {
+                        if (i==1){
+                            ans.append(val).append("x");
+                        }
+                        if (i==0){
+                            ans.append(val);
+                        }
+                    }
+                }
+            }
 		}
-		return ans;
+		return ans.toString();
 	}
 	/**
 	 * Given two polynomial functions (p1,p2), a range [x1,x2] and an epsilon eps. This function computes an x value (x1<=x<=x2)
