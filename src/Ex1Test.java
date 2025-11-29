@@ -215,8 +215,8 @@ class Ex1Test {
 	 * Tests the parsing of a polynom in a String like form.
 	 */
 	public void testFromString() {
-		double[] p = {-1.1,2.3,3.1}; // 3.1X^2+ 2.3x -1.1
-		String sp2 = "3.1x^2 +2.3x -1.1";
+		double[] p = {-1.1,2.3,-3.1,-7}; // 3.1X^2+ 2.3x -1.1
+		String sp2 = "-7.0x^3-3.1x^2+2.3x-1.1";
 		String sp = Ex1.poly(p);
 		double[] p1 = Ex1.getPolynomFromString(sp);
 		double[] p2 = Ex1.getPolynomFromString(sp2);
@@ -226,6 +226,16 @@ class Ex1Test {
 		if(!isSame2) {fail();}
 		assertEquals(sp, Ex1.poly(p1));
 	}
+    @Test
+    void testFromStringSimple() {
+        double[] p = {-1.1,2.3,3.1}; // 3.1X^2+ 2.3x -1.1
+        String e_sp = "3.1x^2+2.3x-1.1";
+        assertEquals(e_sp,Ex1.poly(p));
+        double[] p2 = {-5,0,5.7,3.1,0,-5,3}; // 3x^6+-5x^5+3.1x^3+5.7x^2-5
+        String e_sp2 = "3.0x^6-5.0x^5+3.1x^3+5.7x^2-5.0";
+        String sp2 = Ex1.poly(p2);
+        assertEquals(e_sp2, sp2);
+    }
 	@Test
 	/**
 	 * Tests the equality of pairs of arrays.
@@ -233,7 +243,7 @@ class Ex1Test {
 	public void testEquals() {
 		double[][] d1 = {{0}, {1}, {1,2,0,0}};
 		double[][] d2 = {Ex1.ZERO, {1+ Ex1.EPS/2}, {1,2}};
-		double[][] xx = {{-2* Ex1.EPS}, {1+ Ex1.EPS*1.2}, {1,2, Ex1.EPS}};
+		double[][] xx = {{-2* Ex1.EPS}, {1+ Ex1.EPS*1.2}, {1,2, Ex1.EPS/2}};
 		for(int i=0;i<d1.length;i=i+1) {
 			assertTrue(Ex1.equals(d1[i], d2[i]));
 		}

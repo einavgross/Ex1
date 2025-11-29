@@ -10,6 +10,8 @@
  * @author boaz.benmoshe
 
  */
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class Ex1 {
 	/** Epsilon value for numerical computation, it serves as a "close enough" threshold. */
 	public static final double EPS = 0.001; // the epsilon to be used for the root approximation.
@@ -145,7 +147,7 @@ public class Ex1 {
                         val = ""+poly[i];
                     }
                     if (poly[i] > 0 && !val.equals(""+poly[i])) {
-                        val = " +" + poly[i];
+                        val = "+" + poly[i];
                     }
                     if (i>1) {
                         ans.append(val).append("x^").append(i);
@@ -161,7 +163,7 @@ public class Ex1 {
                 }
             }
 		}
-		return ans.toString();
+        return ans.toString();
 	}
 	/**
 	 * Given two polynomial functions (p1,p2), a range [x1,x2] and an epsilon eps. This function computes an x value (x1<=x<=x2)
@@ -218,21 +220,41 @@ public class Ex1 {
          /////////////////// */
 		return ans;
 	}
+
 	/**
 	 * This function computes the array representation of a polynomial function from a String
 	 * representation. Note:given a polynomial function represented as a double array,
 	 * getPolynomFromString(poly(p)) should return an array equals to p.
 	 * 
 	 * @param p - a String representing polynomial function.
-	 * @return
+	 * @return an array representing the polynomial function's string
+     * this function extract by regex from each monom in the string and inserts it in its exponent's index in the array
+     * double[] ans = ZERO;
+     * int exponent=getExpWithRegex(p)+1; //a sub-function that returns the max power of the polynom
+     * String [] monos = p.split("(?=[+-])",exponent); //split the polynom to separate monoms
+     * ans = new double[exponent]; // create an array of length exponent
+     * for(int i=0;i<monos.length;i++) {
+     *   ans[getExpWithRegex(monos[i])] = getCoefficient(monos[i]);} //insert into the exponent's index the Coefficient (using a sub-function to extract.
+     * return ans;
 	 */
 	public static double[] getPolynomFromString(String p) {
-		double [] ans = ZERO;//  -1.0x^2 +3.0x +2.0
-        /** add you code below
-
-         /////////////////// */
-		return ans;
-	}
+        double[] ans = ZERO;//  -1.0x^2 +3.0x +2.0
+        int exponent=getExpWithRegex(p)+1;
+        String [] monos = p.split("(?=[+-])",exponent);
+        ans = new double[exponent];
+        for(int i=0;i<monos.length;i++) {
+            ans[getExpWithRegex(monos[i])] = getCoefficient(monos[i]);
+        }
+        return ans;
+    }
+    public static void main (String [] args) {
+        String p = "-7.0x^3-3.1x^2+2.3x-1.1";
+        double [] ans = getPolynomFromString(p);
+        IO.println(poly(ans));
+        for (int i = 0; i < ans.length; i++) {
+            System.out.println(ans[i]);
+        }
+    }
 	/**
 	 * This function computes the polynomial function which is the sum of two polynomial functions (p1,p2)
 	 * @param p1 An array of doubles representing a polynomial function.
@@ -442,6 +464,78 @@ public class Ex1 {
             arr[i] = i;
         }
         return arr;
+    }
+
+    /**
+     * this function extract the biggest exponent from a given polynomial function String
+     * @param p a string representing polynomial function
+     * @return an integer exponent
+     * this function extract by regex the first int next to an x or 0 if it's just a number
+     * int exp = -1;
+     * Pattern p_pattern = Pattern.compile("\\^(\\d+)");                    //a regex to extract the number after the ^
+     * Matcher p_matcher = p_pattern.matcher(p);
+     * if (p_matcher.find()) {exp = Integer.parseInt(p_matcher.group(1));}  // set exp to the number found
+     * Pattern num_pattern = Pattern.compile("^[0-9.\\-]+$");               //a regex that matches only double number
+     * Matcher num_matcher = num_pattern.matcher(p);
+     * if (num_matcher.find()) {exp =0;}                                    // set exp to 0
+     * Pattern x_pattern = Pattern.compile("(^[0-9.\\-+]+)x$");             //a regex that matches only __x
+     * Matcher x_matcher = x_pattern.matcher(p);
+     * if (x_matcher.find()) {exp =1;}                                      //set exp to 1
+     * return exp;
+     */
+    private static int getExpWithRegex(String p) {
+        int exp = -1;
+        Pattern p_pattern = Pattern.compile("\\^(\\d+)");
+        Matcher p_matcher = p_pattern.matcher(p);
+        if (p_matcher.find()) {
+            exp = Integer.parseInt(p_matcher.group(1));
+        }
+        Pattern num_pattern = Pattern.compile("^[0-9.\\-]+$");
+        Matcher num_matcher = num_pattern.matcher(p);
+        if (num_matcher.find()) {
+            exp =0;
+        }
+        Pattern x_pattern = Pattern.compile("(^[0-9.\\-+]+)x$");
+        Matcher x_matcher = x_pattern.matcher(p);
+        if (x_matcher.find()) {
+            exp =1;
+        }
+        return exp;
+    }
+
+    /**
+     * this function extract the coefficient of the x from the monom's string
+     * @param p a string representing a monom (x^5, 6x^2,3.4,ect.)
+     * @return a double coefficient
+     * this function extract by regex the double number before the x,1 if its x, -1 if its -x and the number if there's no x.
+     * double coe=0;
+     * if (p.charAt(0) == 'x'||(p.charAt(0) == '+'&&p.charAt(1) == 'x')) {coe=1;} //if p equals to x
+     * else if (p.charAt(0) == '-' && p.charAt(1) == 'x') {coe=-1;}             //else if p equals to -x
+     * else {
+     * String regex = "([0-9.\\-]+)(?=x?)";                 //if x equals to a double number+ x
+     * Pattern pattern = Pattern.compile(regex);
+     * Matcher matcher = pattern.matcher(p);
+     * if (matcher.find()) {coe = Double.parseDouble(matcher.group(1).trim());}
+     * }
+     * return coe;
+     */
+    private static double getCoefficient(String p) {
+        double coe=0;
+        if (p.charAt(0) == 'x' || (p.charAt(0) == '+'&&p.charAt(1) == 'x')) {
+            coe=1;
+        }
+        else if (p.charAt(0) == '-' && p.charAt(1) == 'x') {
+            coe=-1;
+        }
+        else {
+            String regex = "([0-9.\\-]+)(?=x?)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(p);
+            if (matcher.find()) {
+                coe = Double.parseDouble(matcher.group(1).trim());
+            }
+        }
+        return coe;
     }
 }
 
