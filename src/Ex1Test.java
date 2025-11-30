@@ -237,7 +237,37 @@ class Ex1Test {
         assertEquals(e_sp2, sp2);
     }
 
-	@Test
+        @Test
+        void testExponentWithCaret() {
+            String p = "x^3";
+            int exponent = Ex1.getExpWithRegex(p);
+            assertEquals(3, exponent);
+            String number = "42";
+            int exponent0 = Ex1.getExpWithRegex(number);
+            assertEquals( 0, exponent0);
+            String p1 = "5x";
+            int exponent1 = Ex1.getExpWithRegex(p1);
+            assertEquals(1, exponent1);
+            String text = "abc";
+            int nExponent = Ex1.getExpWithRegex(text);
+            assertEquals(-1, nExponent);
+        }
+    @Test
+    void testGetCoefficient() {
+        String m = "+x";
+        assertEquals(1.0, Ex1.getCoefficient(m), Ex1.EPS);
+        String input = "-x";
+        assertEquals( -1.0, Ex1.getCoefficient(input), Ex1.EPS);
+        String m2 = "3x^7";
+        assertEquals( 3.0, Ex1.getCoefficient(m2), Ex1.EPS);
+        String m3 = "-2.5x";
+        assertEquals( -2.5, Ex1.getCoefficient(m3), Ex1.EPS);
+        String m4 = "7";
+        assertEquals(7.0, Ex1.getCoefficient(m4),Ex1.EPS);
+    }
+
+
+    @Test
 	/**
 	 * Tests the equality of pairs of arrays.
 	 */
@@ -334,7 +364,7 @@ class Ex1Test {
 	@Test
 	/**
 	 * Test the area function.
-     * This test fails because of the approximation error comes from the trapezoidal method (2.5<2.501953125)
+         * This test fails because of the approximation error comes from the trapezoidal method (2.5<2.501953125)
 	 */
 	public void testArea3() {
 		double[] po_a = {2,1,-0.7, -0.02,0.02};

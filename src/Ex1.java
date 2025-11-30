@@ -10,6 +10,8 @@
  * @author boaz.benmoshe
 
  */
+import org.junit.jupiter.api.Test;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class Ex1 {
@@ -100,6 +102,9 @@ public class Ex1 {
 	 */
 	public static boolean equals(double[] p1, double[] p2) {
 		boolean ans = true;
+        if (p1.length != p2.length) {
+            ans= false;
+        }
         int n= Math.max(p1.length-1,p2.length-1);
         double [] x = createFinalArr(n+1);
         for (int i = 0; i < x.length && ans; i++) {
@@ -183,7 +188,7 @@ public class Ex1 {
 	 */
 	public static double sameValue(double[] p1, double[] p2, double x1, double x2, double eps) {
         double mid = (x1+x2)/2;
-        if (Math.abs(f(p1, mid)-f(p2, mid))<EPS) {
+        if (Math.abs(f(p1, mid)-f(p2, mid))<=EPS) {
             return mid;
         }
         if ((f(p1, x1) - f(p2, x1)) * (f(p1, mid)-f(p2, mid)) <= 0) {
@@ -260,7 +265,7 @@ public class Ex1 {
                 ans += trapezArea(Math.abs(f(p1, start) - f(p2, start)), Math.abs(f(p1, x) - f(p2, x)), h);
             }
             else {
-            double meet=sameValue(p1,p2,start,x,EPS);
+            double meet=sameValue(p1,p2,start,x,EPS/1000000);
             ans=ans+trapezArea(Math.abs(f(p1, start) - f(p2, start)),Math.abs(f(p1,meet) - f(p2, meet)),meet-start)
                     +trapezArea(Math.abs(f(p1,meet) - f(p2, meet)),Math.abs(f(p1, x) - f(p2, x)),x-meet);
             }
@@ -282,10 +287,10 @@ public class Ex1 {
      * ans = new double[exponent]; // create an array of length exponent
      * for(int i=0;i<monos.length;i++) {
      *   ans[getExpWithRegex(monos[i])] = getCoefficient(monos[i]);} //insert into the exponent's index the Coefficient (using a sub-function to extract.
-     * return ans;
+     * return ans
 	 */
 	public static double[] getPolynomFromString(String p) {
-        double[] ans = ZERO;//  -1.0x^2 +3.0x +2.0
+        double[] ans = ZERO;
         int exponent=getExpWithRegex(p)+1;
         String [] monos = p.split("(?=[+-])",exponent);
         ans = new double[exponent];
@@ -522,7 +527,7 @@ public class Ex1 {
      * if (x_matcher.find()) {exp =1;}                                      //set exp to 1
      * return exp;
      */
-    private static int getExpWithRegex(String p) {
+    public static int getExpWithRegex(String p) {
         int exp = -1;
         Pattern p_pattern = Pattern.compile("\\^(\\d+)");
         Matcher p_matcher = p_pattern.matcher(p);
@@ -558,7 +563,7 @@ public class Ex1 {
      * }
      * return coe;
      */
-    private static double getCoefficient(String p) {
+    public static double getCoefficient(String p) {
         double coe=0;
         if (p.charAt(0) == 'x' || (p.charAt(0) == '+'&&p.charAt(1) == 'x')) {
             coe=1;
@@ -576,6 +581,7 @@ public class Ex1 {
         }
         return coe;
     }
+
 
     /**
      * a function to compute the distance between 2 points: (x1,y1),(x2,y2)
@@ -600,12 +606,10 @@ public class Ex1 {
      * @param b second basis
      * @param h the height of the Trapezoid
      * @return the area of the Trapezoid using the area formula for Trapezoids
-     * double area = (a+b)*h/2;
-     * return area
+     * return (a+b)*h/2
      */
     private static double trapezArea (double a,double b,double h){
-        double area = (a+b)*h/2;
-        return area;
+        return (a+b)*h/2;
     }
 
     /**
