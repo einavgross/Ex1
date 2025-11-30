@@ -103,7 +103,7 @@ public class Ex1 {
         int n= Math.max(p1.length-1,p2.length-1);
         double [] x = createFinalArr(n+1);
         for (int i = 0; i < x.length && ans; i++) {
-            if (Math.abs(f(p1,x[i])-f(p2,x[i]))>EPS){
+            if (Math.abs(f(p1,x[i])-f(p2,x[i]))>=EPS){
                 ans=false;
             }
         }
@@ -174,14 +174,24 @@ public class Ex1 {
 	 * @param x2 - maximal value of the range
 	 * @param eps - epsilon (positive small value (often 10^-3, or 10^-6).
 	 * @return an x value (x1<=x<=x2) for which |p1(x) - p2(x)| < eps.
+     * this function recursively splits the range until it finds the point where the two polynomials are equal(up to EPS)
+     * double mid = (x1+x2)/2;
+     * if (Math.abs(f(p1, mid)-f(p2, mid))<EPS) {return mid;} //if the mid-point is the meeting point.
+     * if ((f(p1, x1) - f(p2, x1)) * (f(p1, mid)-f(p2, mid)) <= 0) { //if the first half contains the meeting point
+     *     return sameValue(p1, p2, x1, mid, eps);}
+     *     else {return sameValue(p1, p2, mid, x2, eps);} //the second half contains the meeting point
 	 */
 	public static double sameValue(double[] p1, double[] p2, double x1, double x2, double eps) {
-		double ans = x1;
-        /** add you code below
-
-         /////////////////// */
-		return ans;
-	}
+        double mid = (x1+x2)/2;
+        if (Math.abs(f(p1, mid)-f(p2, mid))<EPS) {
+            return mid;
+        }
+        if ((f(p1, x1) - f(p2, x1)) * (f(p1, mid)-f(p2, mid)) <= 0) {
+            return sameValue(p1, p2, x1, mid, eps);
+        } else {
+            return sameValue(p1, p2, mid, x2, eps);
+        }
+    }
 	/**
 	 * Given a polynomial function (p), a range [x1,x2] and an integer with the number (n) of sample points.
 	 * This function computes an approximation of the length of the function between f(x1) and f(x2) 
@@ -193,13 +203,26 @@ public class Ex1 {
 	 * @param x2 - maximal value of the range
 	 * @param numberOfSegments - (A positive integer value (1,2,...).
 	 * @return the length approximation of the function between f(x1) and f(x2).
+     * this function divides the range into equal segments and sums the straight-line distances between the points on the curve to compute its length
+     * double ans=0;
+     * double h = Math.abs((x2-x1)/numberOfSegments); //compute the length of each segment
+     * double start = x1;
+     * for (int i = 0; i <numberOfSegments; i++) {
+     * start = x1+h*i;
+     * double x = start+h;
+     * ans+=distance(start,x,f(p,start),f(p,x));} sums the straight-line distances(using sub-function to find the distance) of each segment
+     * return ans
 	 */
 	public static double length(double[] p, double x1, double x2, int numberOfSegments) {
-		double ans = x1;
-        /** add you code below
-
-         /////////////////// */
-		return ans;
+        double ans=0;
+        double h = Math.abs((x2-x1)/numberOfSegments);
+        double start = x1;
+        for (int i = 0; i <numberOfSegments; i++) {
+            start = x1+h*i;
+            double x = start+h;
+            ans+=distance(start,x,f(p,start),f(p,x));
+        }
+        return ans;
 	}
 	
 	/**
@@ -212,12 +235,36 @@ public class Ex1 {
 	 * @param x2 - maximal value of the range
 	 * @param numberOfTrapezoid - a natural number representing the number of Trapezoids between x1 and x2.
 	 * @return the approximated area between the two polynomial functions within the [x1,x2] range.
+     * this function divides the range into trapezoids, checks for meeting points, and sums their areas to find the total area between the two polynomials in the range
+     * double ans = 0;
+     * double n = (x2-x1)/numberOfTrapezoid; //the height of the trapezoid;
+     * for (int i = 0; i < numberOfTrapezoid; i++) {
+     *  double start = x1 + h * i;
+     *  double x = start + h;
+     *  if (!hasAMeetingPoint(p1, p2, start, x)) { //if there's no meeting point = compute the area of the trapezoid as usual (using a sub-function)
+     *     ans += trapezArea(Math.abs(f(p1, start) - f(p2, start)), Math.abs(f(p1, x) - f(p2, x)), h);}
+     *  else { //if there is a meeting point - compute the 2 triangles before and after the point
+     *     double meet=sameValue(p1,p2,start,x,EPS);
+     *     ans=ans+trapezArea(Math.abs(f(p1, start) - f(p2, start)),Math.abs(f(p1,meet) - f(p2, meet)),meet-start)
+     *     +trapezArea(Math.abs(f(p1,meet) - f(p2, meet)),Math.abs(f(p1, x) - f(p2, x)),x-meet);}
+     * }
+     * return ans
 	 */
 	public static double area(double[] p1,double[]p2, double x1, double x2, int numberOfTrapezoid) {
 		double ans = 0;
-        /** add you code below
-
-         /////////////////// */
+        double h = (x2-x1)/numberOfTrapezoid;
+        for (int i = 0; i < numberOfTrapezoid; i++) {
+            double start = x1 + h * i;
+            double x = start + h;
+            if (!hasAMeetingPoint(p1, p2, start, x)) {
+                ans += trapezArea(Math.abs(f(p1, start) - f(p2, start)), Math.abs(f(p1, x) - f(p2, x)), h);
+            }
+            else {
+            double meet=sameValue(p1,p2,start,x,EPS);
+            ans=ans+trapezArea(Math.abs(f(p1, start) - f(p2, start)),Math.abs(f(p1,meet) - f(p2, meet)),meet-start)
+                    +trapezArea(Math.abs(f(p1,meet) - f(p2, meet)),Math.abs(f(p1, x) - f(p2, x)),x-meet);
+            }
+        }
 		return ans;
 	}
 
@@ -246,14 +293,6 @@ public class Ex1 {
             ans[getExpWithRegex(monos[i])] = getCoefficient(monos[i]);
         }
         return ans;
-    }
-    public static void main (String [] args) {
-        String p = "-7.0x^3-3.1x^2+2.3x-1.1";
-        double [] ans = getPolynomFromString(p);
-        IO.println(poly(ans));
-        for (int i = 0; i < ans.length; i++) {
-            System.out.println(ans[i]);
-        }
     }
 	/**
 	 * This function computes the polynomial function which is the sum of two polynomial functions (p1,p2)
@@ -536,6 +575,54 @@ public class Ex1 {
             }
         }
         return coe;
+    }
+
+    /**
+     * a function to compute the distance between 2 points: (x1,y1),(x2,y2)
+     * @param x1 a double value
+     * @param x2 a double value
+     * @param y1 a double value
+     * @param y2 a double value
+     * @return the straight-line distance between the points using the distance formula
+     * double dx = x2 - x1;
+     * double dy = y2 - y1;
+     * return Math.sqrt(dx * dx + dy * dy);
+     */
+    private static double distance(double x1, double x2, double y1, double y2) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * A function that computes the area of a Trapezoid
+     * @param a first basis
+     * @param b second basis
+     * @param h the height of the Trapezoid
+     * @return the area of the Trapezoid using the area formula for Trapezoids
+     * double area = (a+b)*h/2;
+     * return area
+     */
+    private static double trapezArea (double a,double b,double h){
+        double area = (a+b)*h/2;
+        return area;
+    }
+
+    /**
+     * this function check if a given to polynomial function have a meeting point in a given range (x1<=x<=x2)
+     * @param p1 first double array representing a polynomial function
+     * @param p2 second double array representing a polynomial function
+     * @param x1 a double start of the range
+     * @param x2 a double end of the range
+     * @return true if the functions have a meeting point,else return false
+     * this function checks if the two polynomials meet by comparing their values at both ends and returns true if the signs differ or one is zero
+     * if ((f(p1,x1)-f(p2,x1)) * (f(p1,x2)-f(p2,x2)) <= 0){return true;}
+     * return false
+     */
+    private static boolean hasAMeetingPoint (double[]p1,double[]p2,double x1,double x2){
+        if ((f(p1,x1)-f(p2,x1)) * (f(p1,x2)-f(p2,x2)) <= 0){
+            return true;}
+        return false;
     }
 }
 

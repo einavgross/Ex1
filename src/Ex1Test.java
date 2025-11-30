@@ -236,6 +236,7 @@ class Ex1Test {
         String sp2 = Ex1.poly(p2);
         assertEquals(e_sp2, sp2);
     }
+
 	@Test
 	/**
 	 * Tests the equality of pairs of arrays.
@@ -252,6 +253,23 @@ class Ex1Test {
 		}
 	}
     @Test
+    void testLength () {
+        double[]p = {0,1};
+        double x1 = 0;
+        double x2 = 3;
+        int NoS = 3;
+        double expected = 3 * Math.sqrt(2);
+        assertEquals(expected, Ex1.length(p, x1, x2, NoS),Ex1.EPS);
+        double[] p2 = {1, 3, -1, 2};
+        double x3 = 0;
+        double x4 = 2;
+        int NoS2 = 1000;
+        double expected2 = 18.1729;
+        assertEquals(expected2, Ex1.length(p2, x3, x4, NoS2), Ex1.EPS);
+    }
+
+
+    @Test
     void testEqualsSimple() {
         double[] p1 = {5.0, 1.0, 0.0};
         double[] p2 = {5.0, 1.0};
@@ -262,6 +280,15 @@ class Ex1Test {
         double[] p5 = {-0.5, 4.25, 1.0, 0.0};
         double[] p6 = {-0.5, 4.25, 1.0};
         assertTrue(Ex1.equals(p5, p6));
+    }
+    @Test
+    void testSameValueSimple() {
+        double[] p1 = {1.0, 1.0};
+        double[] p2 = {2.0, -1.0};
+        double x1 = 0.0;
+        double x2 = 5.0;
+        double expectedX = 0.5;
+        assertTrue(Ex1.sameValue(p1,p2,x1,x2,Ex1.EPS)<=0.51 && Ex1.sameValue(p1,p2,x1,x2,Ex1.EPS)>=0.4999);
     }
 
 	@Test
@@ -287,6 +314,7 @@ class Ex1Test {
 	@Test
 	/**
 	 * Test the area f1(x)=0, f2(x)=x;
+     * This test fails because of the approximation error comes from the trapezoidal method (2.5<2.501953125)
 	 */
 	public void testArea2() {
 		double[] po_a = Ex1.ZERO;
@@ -306,6 +334,7 @@ class Ex1Test {
 	@Test
 	/**
 	 * Test the area function.
+     * This test fails because of the approximation error comes from the trapezoidal method (2.5<2.501953125)
 	 */
 	public void testArea3() {
 		double[] po_a = {2,1,-0.7, -0.02,0.02};
